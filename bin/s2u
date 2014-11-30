@@ -5,17 +5,17 @@ require_relative '../lib/subtitle2utf8'
 
 options = {}
 OptionParser.new do |opts|
-  opts.banner = 'Usage: s2u [options] file'
+  opts.banner = 'Usage: s2u [-fdr] file'
 
-  opts.on('-f', '--file') do
+  opts.on('-f', '--file', 'convert this file') do
     options[:file] = true
   end
 
-  opts.on('-d', '--directory') do
+  opts.on('-d', '--directory', 'convert files in this directory except for subdirectories') do
     options[:dir] = true
   end
 
-  opts.on('-r', '--recursion') do
+  opts.on('-r', '--recursion', 'convert files in this directory including subdirectories') do
     options[:recursion] = true
   end
 end.parse!
@@ -30,6 +30,7 @@ if options[:file] && options[:dir]
   exit
 end
 
+include Subtitle2utf8
 if options[:file]
   Subtitle2utf8.convert(ARGV[0], :file)
 elsif options[:dir] && options[:recursion]

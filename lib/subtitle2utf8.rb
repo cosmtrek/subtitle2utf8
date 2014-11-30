@@ -49,10 +49,10 @@ module Subtitle2utf8
       file_content =
         # For UTF-16 encodings(UTF-16LE(UNIX platform) and UTF-16BE(WIndows platform))
         # the file open mode must be binary.
-        if encoding == 'UTF-16LE' || 'UTF-16BE'
-          IO.read(origin_file, mode: 'rb', encoding: encoding).dup.force_encoding(encoding).encode('utf-8')
+        if encoding == 'UTF-16LE' || encoding == 'UTF-16BE'
+          IO.read(origin, mode: 'rb', encoding: encoding).dup.force_encoding(encoding).encode('utf-8')
         else
-          File.read(origin, encoding: encoding).force_encoding(encoding).encode('utf-8')
+          File.read(origin, encoding: encoding).dup.force_encoding(encoding).encode('utf-8')
         end
     rescue Exception => e
       puts "#{origin} cannot be converted to utf-8..."

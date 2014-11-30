@@ -10,7 +10,7 @@ Install it yourself as:
 
 ## Usage
 
-Use subtitle2utf8 is much easy. subtitle2utf8 now has two options:
+Use Subtitle2utf8 is much easy. Subtitle2utf8 now has two options:
 
 > cd directory
 > s2u -f file
@@ -19,11 +19,11 @@ It converts a file in the present directory.
 
 > s2u -d directory
 
-It converts all the files in this directory but not including child directory.
+It converts files in this directory except for subdirectories.
 
 > s2u -d -r directory
 
-It converts all the files in this directory including child directory.
+It converts files in this directory including subdirectories.
 
 ## Contributing
 
