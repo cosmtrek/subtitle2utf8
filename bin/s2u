@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require_relative '../lib/subtitle2utf8'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = 'Usage: s2u [options] file'
+
+  opts.on('-f', '--file') do
+    options[:file] = true
+  end
+
+  opts.on('-d', '--directory') do
+    options[:dir] = true
+  end
+
+  opts.on('-r', '--recursion') do
+    options[:recursion] = true
+  end
+end.parse!
+
+if ARGV.size != 1
+  puts "Wrong arguments, one is enough."
+  exit
+end
+
+if options[:file] && options[:dir]
+  puts "Wrong switches..."
+  exit
+end
+
+if options[:file]
+  Subtitle2utf8.convert(ARGV[0], :file)
+elsif options[:dir] && options[:recursion]
+  Subtitle2utf8.convert(ARGV[0], :dir, true)
+else
+  Subtitle2utf8.convert(ARGV[0], :dir, false)
+end
