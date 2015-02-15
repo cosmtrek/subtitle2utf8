@@ -2,48 +2,49 @@ require 'subtitle2utf8/version'
 require 'rchardet'
 
 module Subtitle2utf8
-  def self.convert(val, type, recursion = false)
-    val = File.expand_path val
+  def self.convert(subtitle, type, recursion = false)
+    path = File.expand_path(subtitle)
 
     case type
     when :file
-      if !File.exist? val
-        puts "#{val} does not exist!"
-        exit
+      if !File.exist?(path)
+        abort "#{path} does not exist!"
       end
 
-      convert_file val
+      convert_file(path)
     when :dir
-      if !Dir.exist? val
-        puts "#{val} does not exist!"
-        exit
+      if !Dir.exist?(path)
+        abort "#{path} does not exist!"
       end
 
       if recursion
-        convert_dirs val
+        convert_dirs(path)
       else
-        convert_dir val
+        convert_dir(path)
       end
     end
   end
+
+  private
 
   def convert_file(origin)
     valid = '.srt'
 
     if (ext = File.extname(origin)) != valid
-      puts "#{origin} is not valid file!"
-      exit
+      abort "#{origin} is not valid file!"
     end
 
     name = File.basename(origin, ext)
     # Ignore converted file.
     return if name =~ /^*.utf-8/
 
-    dir = File.dirname origin
+    dir = File.dirname(origin)
     new_file = "#{dir}/#{name}.utf-8#{ext}"
     encoding = CharDet.detect(File.new(origin).read(64))['encoding']
     # GB18030 is a superset of Chinese encoding GB2312.
-    encoding = encoding == 'GB2312' ? 'GB18030' : encoding
+    encoding = begin
+      encoding == 'GB2312' ? 'GB18030' : encoding
+    end
 
     begin
       file_content =
@@ -55,11 +56,10 @@ module Subtitle2utf8
           File.read(origin, encoding: encoding).dup.force_encoding(encoding).encode('utf-8')
         end
     rescue Exception => e
-      puts "#{origin} cannot be converted to utf-8..."
-      return
+      abort "#{e}: #{origin} cannot be converted to utf-8..."
     end
 
-    File.open(new_file, 'w') {|f| f.write file_content}
+    File.open(new_file, 'w') { |f| f.write(file_content) }
   end
 
   def convert_dir(present)

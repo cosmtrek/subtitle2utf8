@@ -21,13 +21,11 @@ OptionParser.new do |opts|
 end.parse!
 
 if ARGV.size != 1
-  puts "Wrong arguments, one is enough."
-  exit
+  abort "Wrong arguments, one is enough."
 end
 
 if options[:file] && options[:dir]
-  puts "Wrong switches..."
-  exit
+  abort "Wrong switches..."
 end
 
 include Subtitle2utf8
