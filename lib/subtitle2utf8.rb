@@ -28,9 +28,10 @@ module Subtitle2utf8
   private
 
   def convert_file(origin)
-    valid = '.srt'
+    valid = ['.srt', '.ass']
 
-    if (ext = File.extname(origin)) != valid
+    ext = File.extname(origin)
+    if !valid.include?(ext)
       abort "#{origin} is not valid file!"
     end
 
@@ -65,12 +66,14 @@ module Subtitle2utf8
   def convert_dir(present)
     Dir.chdir(present) do
       Dir['*.srt'].each { |name| convert_file name }
+      Dir['*.ass'].each { |name| convert_file name }
     end
   end
 
   def convert_dirs(present)
     Dir.chdir(present) do
       Dir['**/*.srt'].each { |name| convert_file name }
+      Dir['**/*.ass'].each { |name| convert_file name }
     end
   end
 end
